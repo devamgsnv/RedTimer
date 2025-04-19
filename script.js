@@ -89,9 +89,9 @@ let events = JSON.parse(localStorage.getItem('pomodoroEvents')) || [];
 // DOM элементы
 const minutesDisplay = document.getElementById('minutes');
 const secondsDisplay = document.getElementById('seconds');
-const startButton = document.getElementById('start');
-const pauseButton = document.getElementById('pause');
-const resetButton = document.getElementById('reset');
+const startButton = document.getElementById('startTimer');
+const pauseButton = document.getElementById('pauseTimer');
+const resetButton = document.getElementById('resetTimer');
 const pomodoroButton = document.getElementById('pomodoro');
 const shortBreakButton = document.getElementById('shortBreak');
 const longBreakButton = document.getElementById('longBreak');

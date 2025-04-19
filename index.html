@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro Timer</title>
+    <title>RedTimer</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -12,16 +12,12 @@
     <nav class="sidebar">
         <div class="logo">
             <i class="fas fa-clock"></i>
-            <span>Pomodoro Pro</span>
+            <span>RedTimer</span>
         </div>
         <ul class="nav-links">
             <li class="active" data-page="timer">
                 <i class="fas fa-hourglass-half"></i>
                 <span>Таймер</span>
-            </li>
-            <li data-page="calendar">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Календарь</span>
             </li>
             <li data-page="tasks">
                 <i class="fas fa-tasks"></i>
@@ -30,6 +26,14 @@
             <li data-page="stats">
                 <i class="fas fa-chart-bar"></i>
                 <span>Статистика</span>
+            </li>
+            <li data-page="integrations">
+                <i class="fas fa-plug"></i>
+                <span>Интеграции</span>
+            </li>
+            <li data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Настройки</span>
             </li>
         </ul>
         <div class="theme-switch">
@@ -51,9 +55,9 @@
                     </div>
                 </div>
                 <div class="controls">
-                    <button id="start" class="btn"><i class="fas fa-play"></i></button>
-                    <button id="pause" class="btn"><i class="fas fa-pause"></i></button>
-                    <button id="reset" class="btn"><i class="fas fa-redo"></i></button>
+                    <button id="startTimer" class="btn"><i class="fas fa-play"></i></button>
+                    <button id="pauseTimer" class="btn"><i class="fas fa-pause"></i></button>
+                    <button id="resetTimer" class="btn"><i class="fas fa-redo"></i></button>
                 </div>
                 <div class="mode-switcher">
                     <button id="pomodoro" class="mode-btn active">Pomodoro</button>
@@ -63,39 +67,34 @@
             </div>
         </div>
 
-        <div class="page" id="calendar-page">
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <h2>Календарь</h2>
-                    <button id="addEvent" class="btn"><i class="fas fa-plus"></i> Добавить событие</button>
-                </div>
-                <div id="calendar"></div>
-                <div class="event-modal" id="eventModal">
-                    <div class="modal-content">
-                        <h3>Добавить событие</h3>
-                        <input type="text" id="eventTitle" placeholder="Название события">
-                        <input type="text" id="eventDate" placeholder="Дата и время">
-                        <textarea id="eventDescription" placeholder="Описание"></textarea>
-                        <div class="modal-buttons">
-                            <button id="saveEvent" class="btn">Сохранить</button>
-                            <button id="cancelEvent" class="btn">Отмена</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="page" id="tasks-page">
             <div class="tasks-container">
                 <h2>Задачи</h2>
                 <div class="task-input">
                     <input type="text" id="taskInput" placeholder="Добавить новую задачу...">
+                    <select id="taskCategory">
+                        <option value="">Выберите категорию</option>
+                        <option value="work">Работа</option>
+                        <option value="study">Учеба</option>
+                        <option value="personal">Личное</option>
+                    </select>
+                    <select id="taskPriority">
+                        <option value="low">Низкий</option>
+                        <option value="medium">Средний</option>
+                        <option value="high">Высокий</option>
+                    </select>
                     <button id="addTask" class="btn"><i class="fas fa-plus"></i></button>
                 </div>
                 <div class="task-filters">
                     <button class="filter-btn active" data-filter="all">Все</button>
                     <button class="filter-btn" data-filter="active">Активные</button>
                     <button class="filter-btn" data-filter="completed">Завершенные</button>
+                    <select id="categoryFilter">
+                        <option value="">Все категории</option>
+                    </select>
+                    <select id="priorityFilter">
+                        <option value="">Все приоритеты</option>
+                    </select>
                 </div>
                 <ul id="taskList" class="task-list"></ul>
             </div>
@@ -121,8 +120,92 @@
                         <p>Дней подряд</p>
                     </div>
                 </div>
-                <div class="stats-chart">
-                    <canvas id="productivityChart"></canvas>
+                <div class="stats-charts">
+                    <div class="chart-container">
+                        <h3>Продуктивность по дням</h3>
+                        <canvas id="productivityChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Распределение по категориям</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="stats-export">
+                    <button id="exportStats" class="btn">Экспорт статистики</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="integrations-page">
+            <div class="integrations-container">
+                <h2>Интеграции</h2>
+                <div class="integration-cards">
+                    <div class="integration-card">
+                        <i class="fab fa-google"></i>
+                        <h3>Google Calendar</h3>
+                        <p>Синхронизация с календарем Google</p>
+                        <button class="btn" id="connectGoogle">Подключить</button>
+                    </div>
+                    <div class="integration-card">
+                        <i class="fab fa-trello"></i>
+                        <h3>Trello</h3>
+                        <p>Управление задачами в Trello</p>
+                        <button class="btn" id="connectTrello">Подключить</button>
+                    </div>
+                    <div class="integration-card">
+                        <i class="fas fa-book"></i>
+                        <h3>Notion</h3>
+                        <p>Экспорт в Notion</p>
+                        <button class="btn" id="connectNotion">Подключить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="settings-page">
+            <div class="settings-container">
+                <h2>Настройки</h2>
+                <div class="settings-section">
+                    <h3>Таймер</h3>
+                    <div class="setting-item">
+                        <label>Рабочий интервал (минуты)</label>
+                        <input type="number" id="workInterval" min="1" max="60" value="25">
+                    </div>
+                    <div class="setting-item">
+                        <label>Короткий перерыв (минуты)</label>
+                        <input type="number" id="shortBreakInterval" min="1" max="30" value="5">
+                    </div>
+                    <div class="setting-item">
+                        <label>Длинный перерыв (минуты)</label>
+                        <input type="number" id="longBreakInterval" min="1" max="60" value="15">
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Уведомления</h3>
+                    <div class="setting-item">
+                        <label>Звуковые уведомления</label>
+                        <input type="checkbox" id="soundNotifications" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Тихие часы</label>
+                        <input type="time" id="quietHoursStart" value="22:00">
+                        <input type="time" id="quietHoursEnd" value="08:00">
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Внешний вид</h3>
+                    <div class="setting-item">
+                        <label>Тема</label>
+                        <select id="themeSelect">
+                            <option value="light">Светлая</option>
+                            <option value="dark">Темная</option>
+                            <option value="custom">Пользовательская</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-actions">
+                    <button id="saveSettings" class="btn">Сохранить настройки</button>
+                    <button id="resetSettings" class="btn">Сбросить настройки</button>
                 </div>
             </div>
         </div>
@@ -130,6 +213,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="js/app.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 
